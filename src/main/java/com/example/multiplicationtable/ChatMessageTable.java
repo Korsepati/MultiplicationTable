@@ -47,6 +47,7 @@ public class ChatMessageTable {
     public void incrementLikes() {
         this.likes++;
     }
+
     public void incrementDislikes() {
         this.dislikes++;
     }
@@ -73,5 +74,17 @@ public class ChatMessageTable {
 
     public Long getId() {
         return id;
+    }
+
+    @Override
+    public String toString() {
+        return "ChatMessageTable{" +
+                "id=" + id +
+                ", sentBy='" + sentBy + '\'' +
+                ", chatMessage='" + chatMessage + '\'' +
+                ", sentAt=" + sentAt +
+                ", likes=" + likes +
+                ", dislikes=" + dislikes +
+                '}';
     }
 }

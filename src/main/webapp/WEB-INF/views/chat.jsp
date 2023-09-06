@@ -1,4 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -19,20 +20,20 @@
     </tr>
     <c:forEach items="${chatMessages}" var="message">
         <tr>
-            <td>${message.sentBy}</td>
+            <td><c:out value = "${message.chatMessage}"/></td>
             <td>${message.chatMessage}</td>
             <td>${message.sentAt}</td>
             <td>${message.id}</td>
             <td>${message.likes}</td>
             <td>${message.dislikes}</td>
             <td>
-                <a href="<c:url value='/likeMessage/${message.id}'/>">Like</a>
-                <a href="<c:url value='/dislikeMessage/${message.id}'/>">Dislike</a>
+                <a href="/chat/likeMessage/${message.id}">Like</a>
+                <a href="/chat/dislikeMessage/${message.id}">Dislike</a>
             </td>
         </tr>
     </c:forEach>
 </table>
 <br>
-<a href="<c:url value='/sendMessage'/>">Send a Message</a>
+<a href="/chat/send">Send a Message</a>
 </body>
 </html>

@@ -1,49 +1,61 @@
 package com.example.multiplicationtable;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
-@RestController
-public class ChatController
-{
+@Controller
+@RequestMapping("/chat")
+public class ChatController {
     @Autowired
     private ChatTableRepository chatTableRepository;
 
-    @GetMapping("/sendMessage/{from}/{message}")
-    public String sendMessage(@PathVariable String from, @PathVariable String message) {
+    @GetMapping("/send")
+    public String sendMessage() {
         try {
-            ChatMessageTable ct = new ChatMessageTable();
-            ct.setSentBy(from);
-            ct.setChatMessage(message);
-            ct.setSentAt(new Date());
-            chatTableRepository.save(ct);
-            return "redirect:/seeChat";
+            return "sendMessage";
         } catch (Exception ex) {
             return "error";
         }
     }
 
-    @GetMapping("/seeChat")
-    public String seeChat(Model model) {
+
+    @PostMapping("/save")
+    public String saveMessage(@ModelAttribute ChatMessage chatMessage) {
+        try {
+            ChatMessageTable ct = new ChatMessageTable();
+            ct.setSentBy(chatMessage.getFrom());
+            ct.setChatMessage(chatMessage.getMessage());
+            ct.setSentAt(new Date());
+            chatTableRepository.save(ct);
+            return "redirect:/chat/see";
+        } catch (Exception ex) {
+            return "error";
+        }
+    }
+
+    @GetMapping("/see")
+    public String seeChat(ModelMap map) {
         try {
             List<ChatMessageTable> cts = chatTableRepository.findAll();
+            System.out.println(cts);
 
             if (cts != null) {
-                model.addAttribute("chatMessages", cts);
+                map.addAttribute("chatMessages", cts);
+                map.put("chatMessages", cts);
                 return "chat";
             } else {
-                model.addAttribute("message", "No Table Found");
+                map.put("message", "No Table Found");
                 return "message";
             }
         } catch (Exception ex) {
-            model.addAttribute("error", ex.getMessage());
+            map.put("error", ex.getMessage());
             return "error";
         }
     }
@@ -57,7 +69,7 @@ public class ChatController
                 ChatMessageTable message = optionalMessage.get();
                 message.incrementLikes();
                 chatTableRepository.save(message);
-                return "redirect:/seeChat";
+                return "redirect:/chat/see";
             } else {
                 return "error";
             }
@@ -75,7 +87,7 @@ public class ChatController
                 ChatMessageTable message = optionalMessage.get();
                 message.incrementDislikes();
                 chatTableRepository.save(message);
-                return "redirect:/seeChat";
+                return "redirect:/chat/see";
             } else {
                 return "error";
             }
@@ -83,7 +95,5 @@ public class ChatController
             return "error";
         }
     }
-
-
 
 }

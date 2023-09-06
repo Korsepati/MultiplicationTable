@@ -1,5 +1,6 @@
 package com.example.multiplicationtable;
 
+import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
@@ -8,34 +9,34 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@RestController
-public class MultiplicationTableController
-{
+@Controller
+@RequestMapping("/table")
+public class MultiplicationTableController {
     @Autowired
     private MultiplicationTableRepository multiplicationTableRepository;
 
-    @GetMapping("/generatetable/{number}")
+    @GetMapping("/generate/{number}")
     public String generateTableAndSave(@PathVariable int number) {
         StringBuilder tableContent = new StringBuilder();
         try {
 
-        for (int i = 1; i <= 10; i++) {
-            int result = number * i;
-            tableContent.append(number).append(" * ").append(i).append(" = ").append(result).append("\n");
-        }
+            for (int i = 1; i <= 10; i++) {
+                int result = number * i;
+                tableContent.append(number).append(" * ").append(i).append(" = ").append(result).append("\n");
+            }
 
-        MultiplicationTable multiplicationTable = new MultiplicationTable();
-        multiplicationTable.setNumber(number);
-        multiplicationTable.setTableContent(tableContent.toString());
-        multiplicationTableRepository.save(multiplicationTable);
-    } catch (Exception ex) {
+            MultiplicationTable multiplicationTable = new MultiplicationTable();
+            multiplicationTable.setNumber(number);
+            multiplicationTable.setTableContent(tableContent.toString());
+            multiplicationTableRepository.save(multiplicationTable);
+        } catch (Exception ex) {
             return ex.getMessage();
         }
 
         return tableContent.toString();
     }
 
-    @GetMapping("/gettable/{number}")
+    @GetMapping("/get/{number}")
     public String getTable(@PathVariable int number) {
         try {
 
@@ -56,7 +57,7 @@ public class MultiplicationTableController
 
     }
 
-    @GetMapping("/table/{id}")
+    @GetMapping("/show/{id}")
     public String getTableById(@PathVariable Long id, Model model) {
         try {
             MultiplicationTable mt = multiplicationTableRepository.findById(id).orElse(null);
