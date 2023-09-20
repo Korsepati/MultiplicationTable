@@ -20,7 +20,7 @@
     </tr>
     <c:forEach items="${chatMessages}" var="message">
         <tr>
-            <td><c:out value = "${message.chatMessage}"/></td>
+            <td><c:out value="${message.sentBy}" /></td>
             <td>${message.chatMessage}</td>
             <td>${message.sentAt}</td>
             <td>${message.id}</td>
@@ -29,10 +29,24 @@
             <td>
                 <a href="/chat/likeMessage/${message.id}">Like</a>
                 <a href="/chat/dislikeMessage/${message.id}">Dislike</a>
+                <a href="/chat/reply?parentMessageId=${message.id}">Reply</a> <!-- Add Reply link -->
             </td>
         </tr>
     </c:forEach>
 </table>
+
+<br>
+
+<!-- Reply Form -->
+<c:if test="${not empty parentMessage}">
+    <h3>Reply to Message ID: ${parentMessage.id}</h3>
+    <form method="POST" action="/chat/saveReply">
+        <input type="hidden" name="parentMessageId" value="${parentMessage.id}" />
+        <textarea name="replyMessage" rows="4" cols="50" placeholder="Compose your reply"></textarea>
+        <button type="submit">Send Reply</button>
+    </form>
+</c:if>
+
 <br>
 <a href="/chat/send">Send a Message</a>
 </body>

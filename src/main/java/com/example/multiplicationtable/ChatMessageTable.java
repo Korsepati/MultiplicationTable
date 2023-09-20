@@ -17,7 +17,19 @@ public class ChatMessageTable {
     String sentBy;
     String chatMessage;
     Date sentAt;
+
+    public Long getParentMessageId() {
+        return parentMessageId;
+    }
+
+    public void setParentMessageId(Long parentMessageId) {
+        this.parentMessageId = parentMessageId;
+    }
+
+    private Long parentMessageId;
+
     private int likes = 0;
+
     private int dislikes = 0;
 
     public String getSentBy() {
